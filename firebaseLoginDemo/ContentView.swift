@@ -20,14 +20,34 @@ struct ContentView: View {
                 
                 Text("Login with Microsoft").padding()
             }
+            
             .padding()
+        
         }else{
             VStack{
+                Button("SignOut", action:signOutButtonClicked )
+                
                 Text("Welcome! You have been signed in.")
-            }
+            //MARK: -------------------------------------------------
+                //Add OAuth here
+//                print(authResult.additionalUserInfo.profile)
+            }.padding()
         }
-        
     }
+    
+    func signOutButtonClicked() {
+        print("BOSS BB")
+    }
+    
+//    func signOutButtonClicked() {
+//        let auth = Auth.auth()
+//
+//        do {
+//            try auth.signOut()
+//        } catch let signoutError {
+//            self.present(provider.createAlertController(title: "Error", message: signoutError.localizedDescription), animated: true, completion: nil)
+//        }
+//    }
     
     func signButtonClicked(){
         provider.getCredentialWith(nil) { credential, error in
@@ -39,10 +59,19 @@ struct ContentView: View {
               if error != nil {
                 // Handle error.
               }
+                 
             print("Sign in successful!")
+                  
+                  
+                  print("Successful TEST HSC")
+//                  let cred:OAuthCredential = authResult?.credential as! OAuthCredential
+//                  let oAuthCredential = aut˚hResult?.additionalUserInfo?.profile as! OAuthCredential
+//                                      print(oAuthCredential.accessToken!) // Prints token
+//                          print(oAuthCredential.idToken ?? <#default value#>) // Prints nil
+                  
                   signedIn = true
               // User is signed in.
-              // IdP data available in authResult.additionalUserInfo.profile.
+//               IdP data available in authResult.additionalUserInfo.profile
               // OAuth access token can also be retrieved:
               // (authResult.credential as? OAuthCredential)?.accessToken
               // OAuth ID token can also be retrieved:
@@ -54,8 +83,8 @@ struct ContentView: View {
     }
 }
 
-//struct ContentView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ContentView()
-//    }
-//}
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
+}
