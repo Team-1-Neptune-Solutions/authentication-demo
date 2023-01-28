@@ -10,47 +10,49 @@ import Firebase
 import FirebaseAuth
 
 struct ContentView: View {
+    
     var provider = OAuthProvider(providerID: "microsoft.com")
+    
     @State var signedIn:Bool = false
+    @State var name:String? = "User"
+    
     var body: some View {
         if(!signedIn){
             VStack {
                 Button("Sign-In",
-                       action:signButtonClicked)
+                       action:signInButtonClicked)
                 
                 Text("Login with Microsoft").padding()
             }
             .padding()
         }else{
             VStack{
-                Text("Welcome! You have been signed in.")
+                Text("Welcome \(name ?? "user")!")
             }
         }
         
     }
     
-    func signButtonClicked(){
+    func signInButtonClicked(){
         provider.getCredentialWith(nil) { credential, error in
           if error != nil {
             // Handle error.
           }
-          if credential != nil {
-              Auth.auth().signIn(with: credential!) { authResult, error in
-              if error != nil {
+          if let credential{
+              Auth.auth().signIn(with: credential) { authResult, error in
+
+                  if let error {
                 // Handle error.
-              }
-            print("Sign in successful!")
+                  print("Login failed due to \(error)")
+                  }
+            
+                  guard let authResult else{ return }
+                 //Signed in
+                  name = authResult.user.displayName
                   signedIn = true
-              // User is signed in.
-              // IdP data available in authResult.additionalUserInfo.profile.
-              // OAuth access token can also be retrieved:
-              // (authResult.credential as? OAuthCredential)?.accessToken
-              // OAuth ID token can also be retrieved:
-              // (authResult.credential as? OAuthCredential)?.idToken
             }
           }
         }
-
     }
 }
 
