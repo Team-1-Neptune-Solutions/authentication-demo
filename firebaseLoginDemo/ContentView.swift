@@ -13,6 +13,10 @@ struct ContentView: View {
     
     var provider = OAuthProvider(providerID: "microsoft.com")
     
+//    provider.customParameters = [
+//        "prompt":"select_account"
+//    ]
+    
     @State var signedIn:Bool = false
     @State var name:String? = "User"
     
@@ -28,12 +32,18 @@ struct ContentView: View {
         }else{
             VStack{
                 Text("Welcome \(name ?? "user")!")
+                Button("Sign out",
+                action: signOut
+                )
             }
         }
         
     }
     
     func signInButtonClicked(){
+        provider.customParameters = [
+            "prompt":"login"
+        ]
         provider.getCredentialWith(nil) { credential, error in
           if error != nil {
             // Handle error.
@@ -52,6 +62,16 @@ struct ContentView: View {
                   signedIn = true
             }
           }
+        }
+    }
+    
+    func signOut(){
+        let firebaseAuth = Auth.auth()
+        do {
+          try firebaseAuth.signOut()
+                    signedIn=false
+        } catch let signOutError as NSError {
+          print("Error signing out: %@", signOutError)
         }
     }
 }
